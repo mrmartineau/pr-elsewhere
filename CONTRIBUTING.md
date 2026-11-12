@@ -83,15 +83,40 @@ rsvg-convert -w 96 -h 96 icons/icon.svg | magick - -background none -gravity cen
 
 One zip works for the Chrome Web Store, Firefox Add-ons and Microsoft Edge Add-ons.
 
+### 1. Make the package
+
 1. Raise `version` in `manifest.json`. Each store refuses a version it already has.
 2. Run `npx web-ext lint`. It must show 0 errors and 0 warnings.
 3. Run `npx web-ext build`. This makes `dist/pr_elsewhere-<version>.zip`. Settings are in `web-ext-config.mjs`.
-4. Upload the zip:
-   - **Chrome:** [Chrome Web Store developer dashboard](https://chrome.google.com/webstore/devconsole)
-   - **Firefox:** [Firefox Add-ons developer hub](https://addons.mozilla.org/developers/addon/submit/distribution). The code has no build step, so do not upload source code when asked.
-   - **Edge:** [Partner Center](https://partner.microsoft.com/dashboard/microsoftedge/overview)
+
+### 2. Update the Chrome Web Store
+
+The extension is [already listed](https://chromewebstore.google.com/detail/pr-elsewhere/hmimlnfnlppakencgbbipplgnaadjjjp).
+
+1. Open the [developer dashboard](https://chrome.google.com/webstore/devconsole) and click **PR Elsewhere**.
+2. Open **Package** and click **Upload new package**. Pick the zip.
+3. If the description or screenshots changed, update **Store listing**.
+4. Click **Submit for review**. Users get the new version after Google approves it.
 
 Chrome shows a warning about the `browser_specific_settings` key. Firefox needs that key, and Chrome ignores it, so you can ignore the warning.
+
+### 3. Submit to Firefox Add-ons
+
+**First time:**
+
+1. Open the [submit page](https://addons.mozilla.org/developers/addon/submit/distribution).
+2. Choose **On this site**, so the add-on gets a public listing.
+3. Upload the zip.
+4. When it asks for source code, answer **No**. The code has no build step, so the zip is the source.
+5. Fill in the listing (name, summary, category, license) and submit.
+
+Firefox reads the add-on ID from `browser_specific_settings.gecko.id` in `manifest.json`. Do not change it, or Firefox treats the upload as a new add-on.
+
+**Later updates:** open [My Add-ons](https://addons.mozilla.org/developers/addons), click **PR Elsewhere**, click **Upload New Version**, and upload the zip.
+
+### 4. Edge (optional)
+
+Upload the same zip in [Partner Center](https://partner.microsoft.com/dashboard/microsoftedge/overview).
 
 ## Send a pull request
 
