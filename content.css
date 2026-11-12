@@ -12,6 +12,7 @@
   align-items: center;
   gap: var(--base-size-4, 4px);
   height: var(--control-small-size, 28px);
+  margin-bottom: var(--base-size-8, .5rem);
   padding: 0 var(--control-small-paddingInline-condensed, 8px);
   font: inherit;
   font-size: var(--text-body-size-small, 12px);

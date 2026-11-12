@@ -23,8 +23,13 @@ const ID = 'pr-elsewhere'
 const MENU_ID = `${ID}-menu`
 // GitHub and Refined GitHub already use most letters (`v` opens the review dialog); `e` is free
 const HOTKEY = 'e'
-// The flex row that holds the Conversation / Commits / Checks / Files changed tabs
-const TABS_SELECTOR = 'nav[aria-label="Pull request navigation"] > div'
+// The row that holds the PR tabs. GitHub has three PR page designs live at once:
+// React page, classic page (the "go back" option), and the new (Dec 2026) page
+const TABS_SELECTOR = [
+  'nav[aria-label="Pull request navigation"] > div',
+  'nav[aria-label="Pull request tabs"]',
+  'nav[aria-label="Pull request"] > ul',
+].join(', ')
 
 // Octicon paths: link-external and triangle-down
 const ICON_EXTERNAL =
@@ -76,8 +81,8 @@ const closeMenu = () => {
   if (menu?.matches(':popover-open')) menu.hidePopover()
 }
 
-const createButton = () => {
-  const wrapper = document.createElement('div')
+const createButton = (tag) => {
+  const wrapper = document.createElement(tag)
   wrapper.id = ID
 
   const menu = document.createElement('div')
@@ -122,7 +127,9 @@ const createButton = () => {
 
 const ensureButton = () => {
   if (document.getElementById(ID) || !parsePr(location.pathname)) return
-  document.querySelector(TABS_SELECTOR)?.append(createButton())
+  const tabs = document.querySelector(TABS_SELECTOR)
+  // The new page's tabs are a <ul>, so the button goes in as the last <li>
+  tabs?.append(createButton(tabs.tagName === 'UL' ? 'li' : 'div'))
 }
 
 // GitHub swaps the page without a full load, so watch the DOM and re-add the button when it goes
